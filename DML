@@ -1,0 +1,318 @@
+mysql> CREATE TABLE Book (Book_ID INT PRIMARY KEY,Book_Name
+VARCHAR(50),Author VARCHAR(50),Price INT,Category VARCHAR(30));
+Query OK, 0 rows affected (0.08 sec)
+mysql> CREATE TABLE Issued_Book (Book_Name VARCHAR(50));
+Query OK, 0 rows affected (0.02 sec)
+mysql> INSERT INTO Book VALUES(1, 'Database Systems', 'Navathe', 500, 'Education'),(2,
+'Operating System', 'Silberschatz', 650, 'Education'),(3, 'C Programming', 'Dennis Ritchie', 300,
+'Programming'),(4, 'Python Basics', 'Guido', 400, 'Programming');
+Query OK, 4 rows affected (0.01 sec)
+Records: 4 Duplicates: 0 Warnings: 0
+mysql> show tables;
++----------------+
+| Tables_in_dept |
++----------------+
+| book |
+| course |
+| department |
+| issued_book |
+| student |
++----------------+
+5 rows in set (0.00 sec)
+mysql> select * from Book;
++---------+------------------+----------------+-------+-------------+
+| Book_ID | Book_Name | Author | Price | Category |
++---------+------------------+----------------+-------+-------------+
+| 1 | Database Systems | Navathe | 500 | Education |
+| 2 | Operating System | Silberschatz | 650 | Education |
+| 3 | C Programming | Dennis Ritchie | 300 | Programming |
+| 4 | Python Basics | Guido | 400 | Programming |
++---------+------------------+----------------+-------+-------------+
+4 rows in set (0.00 sec)
+mysql> UPDATE Book SET Price = Price + (Price * 0.10)WHERE Category = 'Programming';
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2 Changed: 2 Warnings: 0
+mysql> select * from Book;
++---------+------------------+----------------+-------+-------------+
+| Book_ID | Book_Name | Author | Price | Category |
++---------+------------------+----------------+-------+-------------+
+| 1 | Database Systems | Navathe | 500 | Education |
+| 2 | Operating System | Silberschatz | 650 | Education |
+| 3 | C Programming | Dennis Ritchie | 330 | Programming |
+| 4 | Python Basics | Guido | 440 | Programming |
++---------+------------------+----------------+-------+-------------+
+4 rows in set (0.00 sec)
+mysql> DELETE FROM Book WHERE Price < 350;
+Query OK, 1 row affected (0.01 sec)
+mysql> select * from Book;
++---------+------------------+--------------+-------+-------------+
+| Book_ID | Book_Name | Author | Price | Category |
++---------+------------------+--------------+-------+-------------+
+| 1 | Database Systems | Navathe | 500 | Education |
+| 2 | Operating System | Silberschatz | 650 | Education |
+| 4 | Python Basics | Guido | 440 | Programming |
++---------+------------------+--------------+-------+-------------+
+3 rows in set (0.00 sec)
+APPLY ARITHMETIC OPERATORS
+mysql> SELECT Book_Name, Price, Price + 50 AS New_Price FROM Book;
++------------------+-------+-----------+
+| Book_Name | Price | New_Price |
++------------------+-------+-----------+
+| Database Systems | 500 | 550 |
+| Operating System | 650 | 700 |
+| Python Basics | 440 | 490 |
++------------------+-------+-----------+
+3 rows in set (0.00 sec)
+APPLY LOGICAL OPERATORS (AND, OR, NOT)
+mysql> SELECT * FROM Book WHERE Category = 'Education' AND Price > 500;
++---------+------------------+--------------+-------+-----------+
+| Book_ID | Book_Name | Author | Price | Category |
++---------+------------------+--------------+-------+-----------+
+| 2 | Operating System | Silberschatz | 650 | Education |
++---------+------------------+--------------+-------+-----------+
+1 row in set (0.00 sec)
+PATTERN MATCHING (LIKE Operator)
+mysql> SELECT * FROM Book WHERE Book_Name LIKE 'D%';
++---------+------------------+---------+-------+-----------+
+| Book_ID | Book_Name | Author | Price | Category |
++---------+------------------+---------+-------+-----------+
+| 1 | Database Systems | Navathe | 500 | Education |
++---------+------------------+---------+-------+-----------+
+1 row in set (0.00 sec)
+STRING FUNCTIONS
+mysql> SELECT UPPER(Book_Name) AS Book_Upper,LOWER(Author) AS Author_Lower
+FROM Book;
++------------------+--------------+
+| Book_Upper | Author_Lower |
++------------------+--------------+
+| DATABASE SYSTEMS | navathe |
+| OPERATING SYSTEM | silberschatz |
+| PYTHON BASICS | guido |
++------------------+--------------+
+3 rows in set (0.00 sec)
+mysql> SELECT Book_Name, LENGTH(Book_Name) AS Name_Length FROM Book;
++------------------+-------------+
+| Book_Name | Name_Length |
++------------------+-------------+
+| Database Systems | 16 |
+| Operating System | 16 |
+| Python Basics | 13 |
++------------------+-------------+
+3 rows in set (0.01 sec)
+mysql> SELECT SUBSTRING(Book_Name, 1, 4) AS Short_Name FROM Book;
++------------+
+| Short_Name |
++------------+
+| Data |
+| Oper |
+| Pyth |
++------------+
+3 rows in set (0.00 sec)
+SET OPERATORS
+mysql> INSERT INTO Issued_Book VALUES ('Database Systems'), ('Python Basics');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2 Duplicates: 0 Warnings: 0
+mysql> select * from Issued_Book;
++------------------+
+| Book_Name |
++------------------+
+| Database Systems |
+| Python Basics |
++------------------+
+2 rows in set (0.00 sec)
+mysql> SELECT Book_Name FROM Book UNION SELECT Book_Name FROM
+Issued_Book;
++------------------+
+| Book_Name |
++------------------+
+| Database Systems |
+| Operating System |
+| Python Basics |
++------------------+
+3 rows in set (0.00 sec)
+mysql> SELECT Book_Name FROM Book INTERSECT SELECT Book_Name FROM
+Issued_Book;
++------------------+
+| Book_Name |
++------------------+
+| Database Systems |
+| Python Basics |
++------------------+
+2 rows in set (0.00 sec)
+mysql> SELECT Book_Name FROM Book EXCEPT SELECT Book_Name FROM
+Issued_Book;
++------------------+
+| Book_Name |
++------------------+
+| Operating System |
++------------------+
+1 row in set (0.00 sec)
+b) Access Control (DCL): Use GRANT, REVOKE, and ROLE commands to manage user
+access.
+Step 1: Create Database & Table (Admin)
+mysql> CREATE DATABASE college_db;
+Query OK, 1 row affected (0.01 sec)
+mysql> USE college_db;
+Database changed
+mysql> CREATE TABLE student (roll_no INT PRIMARY KEY,name VARCHAR(50),marks
+INT);
+Query OK, 0 rows affected (0.02 sec)
+Insert Data
+mysql> INSERT INTO student VALUES(1,'Amit',85),(2,'Neha',90),(3,'Ravi',78);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+mysql> select * from student;
++---------+------+-------+
+| roll_no | name | marks |
++---------+------+-------+
+| 1 | Amit | 85 |
+| 2 | Neha | 90 |
+| 3 | Ravi | 78 |
++---------+------+-------+
+3 rows in set (0.00 sec)
+Step 2: Create Users (MySQL)
+mysql> CREATE USER 'admin1'@'localhost' IDENTIFIED BY 'admin123';
+Query OK, 0 rows affected (0.04 sec)
+mysql> CREATE USER 'faculty1'@'localhost' IDENTIFIED BY 'faculty123';
+Query OK, 0 rows affected (0.02 sec)
+mysql> CREATE USER 'student1'@'localhost' IDENTIFIED BY 'student123';
+Query OK, 0 rows affected (0.01 sec)
+Step 3: Create ROLES (MySQL 8.0+)
+mysql> CREATE ROLE 'admin_role';
+Query OK, 0 rows affected (0.01 sec)
+mysql> CREATE ROLE 'faculty_role';
+Query OK, 0 rows affected (0.01 sec)
+mysql> CREATE ROLE 'student_role';
+Query OK, 0 rows affected (0.01 sec)
+Step 4: GRANT Privileges to ROLES
+Admin Role – Full Access
+mysql> GRANT ALL PRIVILEGES ON college_db.* TO 'admin_role';
+Query OK, 0 rows affected (0.01 sec)
+Faculty Role – Read & Update Marks
+mysql> GRANT SELECT, UPDATE ON college_db.student TO 'faculty_role';
+Query OK, 0 rows affected (0.01 sec)
+Student Role – Read Only
+mysql> GRANT SELECT ON college_db.student TO 'student_role';
+Query OK, 0 rows affected (0.00 sec)
+Step 5: Assign ROLES to Users
+mysql> GRANT 'admin_role' TO 'admin1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+mysql> GRANT 'faculty_role' TO 'faculty1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+mysql> GRANT 'student_role' TO 'student1'@'localhost';
+Query OK, 0 rows affected (0.00 sec)
+Activate Role (Mandatory)
+mysql> SET DEFAULT ROLE ALL TO
+-> 'admin1'@'localhost',
+-> 'faculty1'@'localhost',
+-> 'student1'@'localhost';
+Query OK, 0 rows affected (0.01 sec)
+Step 6: Check Granted Privileges (Output)
+mysql> SHOW GRANTS FOR 'faculty1'@'localhost';
++----------------------------------------------------+
+| Grants for faculty1@localhost |
++----------------------------------------------------+
+| GRANT USAGE ON *.* TO `faculty1`@`localhost` |
+| GRANT `faculty_role`@`%` TO `faculty1`@`localhost` |
++----------------------------------------------------+
+2 rows in set (0.00 sec)
+Step 7: Login / Switch Between Users (Windows)
+mysql> exit
+Bye
+C:\Users\Administrator>mysql -u student1 -p
+Enter password: **********
+Welcome to the MySQL monitor. Commands end with ; or \g.
+Your MySQL connection id is 13
+Server version: 8.4.8 MySQL Community Server - GPL
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+Step 8: Test Access (Input & Output)
+Student User
+mysql> SELECT * FROM college_db.student;
++---------+------+-------+
+| roll_no | name | marks |
++---------+------+-------+
+| 1 | Amit | 85 |
+| 2 | Neha | 90 |
+| 3 | Ravi | 78 |
++---------+------+-------+
+3 rows in set (0.00 sec)
+mysql> INSERT INTO college_db.student VALUES (4,'Pooja',88);
+ERROR 1142 (42000): INSERT command denied to user 'student1'@'localhost' for table
+'student'
+Step 9: REVOKE Privileges
+mysql> REVOKE UPDATE ON college_db.student FROM 'faculty_role';
+ERROR 1142 (42000): UPDATE, GRANT command denied to user 'student1'@'localhost' for
+table 'student'
+mysql> SHOW GRANTS FOR 'faculty1'@'localhost';
+ERROR 1142 (42000): SELECT command denied to user 'student1'@'localhost' for table 'user'
+mysql> DROP ROLE 'student_role';
+ERROR 1227 (42000): Access denied; you need (at least one of) the CREATE USER, DROP
+ROLE privilege(s) for this operation
+Step 10: Drop Role / User (Optional)
+mysql> DROP USER 'student1'@'localhost';
+c) Transaction Control (TCL): Apply START TRANSACTION, COMMIT, ROLLBACK,
+and SAVEPOINT commands to manage transactions.
+mysql> create database Bank;
+Query OK, 1 row affected (0.01 sec)
+mysql> use Bank;
+Database changed
+mysql> CREATE TABLE Account (Acc_No INT PRIMARY KEY,Acc_Holder
+VARCHAR(50),Balance INT);
+Query OK, 0 rows affected (0.03 sec)
+mysql> INSERT INTO Account VALUES(101, 'Amit Patil', 10000),(102, 'Neha Sharma',
+15000);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2 Duplicates: 0 Warnings: 0
+mysql> select * from Account;
++--------+-------------+---------+
+| Acc_No | Acc_Holder | Balance |
++--------+-------------+---------+
+| 101 | Amit Patil | 10000 |
+| 102 | Neha Sharma | 15000 |
++--------+-------------+---------+
+2 rows in set (0.00 sec)
+mysql> START TRANSACTION;
+Query OK, 0 rows affected (0.00 sec)
+mysql> UPDATE Account SET Balance = Balance - 2000 WHERE Acc_No = 101;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1 Changed: 1 Warnings: 0
+mysql> UPDATE Account SET Balance = Balance + 2000 WHERE Acc_No = 102;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1 Changed: 1 Warnings: 0
+mysql> SAVEPOINT transfer_done;
+Query OK, 0 rows affected (0.00 sec)
+mysql> select * from Account;
++--------+-------------+---------+
+| Acc_No | Acc_Holder | Balance |
++--------+-------------+---------+
+| 101 | Amit Patil | 8000 |
+| 102 | Neha Sharma | 17000 |
++--------+-------------+---------+
+2 rows in set (0.00 sec)
+mysql> UPDATE Account SET Balance = Balance - 5000 WHERE Acc_No = 101;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1 Changed: 1 Warnings: 0
+mysql> ROLLBACK TO transfer_done;
+Query OK, 0 rows affected (0.00 sec)
+mysql> select * from Account;
++--------+-------------+---------+
+| Acc_No | Acc_Holder | Balance |
++--------+-------------+---------+
+| 101 | Amit Patil | 8000 |
+| 102 | Neha Sharma | 17000 |
++--------+-------------+---------+
+2 rows in set (0.00 sec)
+mysql> COMMIT;
+Query OK, 0 rows affected (0.01 sec)
+mysql> select * from Account;
++--------+-------------+---------+
+| Acc_No | Acc_Holder | Balance |
++--------+-------------+---------+
+| 101 | Amit Patil | 8000 |
+| 102 | Neha Sharma | 17000 |
++--------+-------------+---------+
+2 rows in set (0.00 sec)
