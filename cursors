@@ -1,0 +1,52 @@
+mysql> CREATE TABLE Emp1 (emp_id int,emp_name VARCHAR(50),salary int);
+Query OK, 0 rows affected (0.02 sec)
+mysql> INSERT INTO Emp1 VALUES (1, 'Ram', 50000);
+Query OK, 1 row affected (0.01 sec)
+mysql> INSERT INTO Emp1 VALUES (2, 'Sham', 60000);
+Query OK, 1 row affected (0.01 sec)
+mysql> INSERT INTO Emp1 VALUES (3, 'Tom', 55000);
+Query OK, 1 row affected (0.01 sec)
+mysql> DELIMITER //
+mysql> DROP PROCEDURE IF EXISTS show_employee_details //
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+mysql> CREATE PROCEDURE show_employee_details()
+-> BEGIN
+-> DECLARE done INT DEFAULT 0;
+-> DECLARE v_id INT;
+-> DECLARE v_name VARCHAR(20);
+-> DECLARE v_salary INT;
+-> DECLARE emp_cursor CURSOR FOR
+-> SELECT emp_id,emp_name,salary from Emp1;
+-> DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+-> OPEN emp_cursor;
+-> read_loop: LOOP
+-> FETCH emp_cursor INTO v_id, v_name, v_salary;
+-> IF done = 1 THEN
+-> LEAVE read_loop;
+-> END IF;
+-> SELECT v_id,v_name, v_salary;
+-> END LOOP;
+-> CLOSE emp_cursor;
+-> END //
+Query OK, 0 rows affected (0.02 sec)
+mysql> DELIMITER ;
+mysql> call show_employee_details();
++------+--------+----------+
+| v_id | v_name | v_salary |
++------+--------+----------+
+| 1 | Ram | 50000 |
++------+--------+----------+
+1 row in set (0.01 sec)
++------+--------+----------+
+| v_id | v_name | v_salary |
++------+--------+----------+
+| 2 | Sham | 60000 |
++------+--------+----------+
+1 row in set (0.03 sec)
++------+--------+----------+
+| v_id | v_name | v_salary |
++------+--------+----------+
+| 3 | Tom | 55000 |
++------+--------+----------+
+1 row in set (0.07 sec)
+Query OK, 0 rows affected (0.12 sec)
