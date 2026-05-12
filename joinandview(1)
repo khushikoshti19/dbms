@@ -1,0 +1,125 @@
+mysql> use SEA75;
+Database changed
+mysql> create table student(Rollno int,Name varchar(20),Address varchar(20));
+Query OK, 0 rows affected (1.93 sec)
+mysql> create table Marks(Rollno int,Name varchar(20),marks int);
+Query OK, 0 rows affected (0.76 sec)
+mysql> insert into student values(1,
+'Mayuri'
+,
+'Pune');
+Query OK, 1 row affected (0.20 sec)
+mysql> insert into student values(3,
+'Sakshi'
+,
+'Nashik');
+Query OK, 1 row affected (0.13 sec)
+mysql> insert into student values(2,
+'Priya'
+,
+'Mumbai');
+Query OK, 1 row affected (0.10 sec)
+mysql> insert into Marks values(1,
+'Mayuri'
+,88);
+Query OK, 1 row affected (0.10 sec)
+mysql> insert into Marks values(2,
+'Priya'
+,67);
+Query OK, 1 row affected (0.11 sec)
+mysql> insert into Marks values(5,
+'Arya'
+,90);
+Query OK, 1 row affected (0.12 sec)
+mysql> insert into Marks values(6,
+'Rani'
+,80);
+Query OK, 1 row affected (0.14 sec)
+mysql> select * from student;
++--------+--------+---------+
+| Rollno | Name | Address |
++--------+--------+---------+
+| 1 | Mayuri | Pune |
+| 3 | Sakshi | Nashik |
+| 2 | Priya | Mumbai |
++--------+--------+---------+
+mysql> select * from Marks;
++--------+--------+-------+
+| Rollno | Name | marks |
++--------+--------+-------+
+| 1 | Mayuri | 88 |
+| 2 | Priya | 67 |
+| 5 | Arya | 90 |
+| 6 | Rani | 80 |
++--------+--------+-------+
+4 rows in set (0.00 sec)
+mysql> select student.Rollno,student.Name,Address,Marks from student inner join Marks on
+student.Rollno=Marks.Rollno;
++--------+--------+---------+-------+
+| Rollno | Name | Address | Marks |
++--------+--------+---------+-------+
+| 1 | Mayuri | Pune | 88 |
+| 2 | Priya | Mumbai | 67 |
++--------+--------+---------+-------+
+2 rows in set (0.03 sec)
+mysql> select student.Rollno,student.Name,Address,Marks from student left join Marks on
+student.Rollno=Marks.Rollno;
++--------+--------+---------+-------+
+| Rollno | Name | Address | Marks |
++--------+--------+---------+-------+
+| 1 | Mayuri | Pune | 88 |
+| 3 | Sakshi | Nashik | NULL |
+| 2 | Priya | Mumbai | 67 |
++--------+--------+---------+-------+
+3 rows in set (0.02 sec)
+mysql> select student.Rollno,student.Name,Address,Marks from student right join Marks on
+student.Rollno=Marks.Rollno;
++--------+--------+---------+-------+
+| Rollno | Name | Address | Marks |
++--------+--------+---------+-------+
+| 1 | Mayuri | Pune | 88 |
+| 2 | Priya | Mumbai | 67 |
+| NULL | NULL | NULL | 90 |
+| NULL | NULL | NULL | 80 |
++--------+--------+---------+-------+
+4 rows in set (0.00 sec)
+mysql> (select student.Rollno,student.Name,Address,Marks from student left join Marks on
+student.Rollno=Marks.Rollno)union(select student.Rollno,student.Name,Address,Marks from
+student left join Marks on student.Rollno=Marks.Rollno);
++--------+--------+---------+-------+
+| Rollno | Name | Address | Marks |
++--------+--------+---------+-------+
+| 1 | Mayuri | Pune | 88 |
+| 3 | Sakshi | Nashik | NULL |
+| 2 | Priya | Mumbai | 67 |
++--------+--------+---------+-------+
+mysql> create view view1 as select Rollno ,Name from student;
+Query OK, 0 rows affected (0.17 sec)
+mysql> select * from view1;
++--------+--------+
+| Rollno | Name |
++--------+--------+
+| 1 | Mayuri |
+| 3 | Sakshi |
+| 2 | Priya |
++--------+--------+
+mysql> select * from view1 where Rollno=3;
++--------+--------+
+| Rollno | Name |
++--------+--------+
+| 3 | Sakshi |
++--------+--------+
+1 row in set (0.00 sec)
+mysql> create view left
+_join as select student.Rollno,Marks.Name,Address,Marks from student
+left join Marks on student.Rollno=Marks.Rollno;
+Query OK, 0 rows affected (0.21 sec)
+mysql> select * from left
+_join;
++--------+--------+---------+-------+
+| Rollno | Name | Address | Marks |
++--------+--------+---------+-------+
+| 1 | Mayuri | Pune | 88 |
+| 3 | NULL | Nashik | NULL |
+| 2 | Priya | Mumbai | 67 |
++--------+--------+---------+-------+
