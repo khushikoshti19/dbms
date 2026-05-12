@@ -1,0 +1,234 @@
+gescoe@gescoe-OptiPlex-3010:~$ mongosh
+Current Mongosh Log ID: 69eeef2af0eb7daf5fce5f46
+Connecting to:
+mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&ap
+pName=mongosh+2.5.8
+Using MongoDB: 8.2.1
+Using Mongosh: 2.5.8
+mongosh 2.5.9 is available for download: https://www.mongodb.com/try/download/shell
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+------
+The server generated these startup warnings when booting
+2026-04-27T10:33:34.149+05:30: Using the XFS filesystem is strongly recommended with the
+WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+2026-04-27T10:33:41.826+05:30: Access control is not enabled for the database. Read and write
+access to data and configuration is unrestricted
+2026-04-27T10:33:41.827+05:30: For customers running the current memory allocator, we
+suggest changing the contents of the following sysfsFile
+2026-04-27T10:33:41.827+05:30: For customers running the current memory allocator, we
+suggest changing the contents of the following sysfsFile
+2026-04-27T10:33:41.827+05:30: We suggest setting the contents of sysfsFile to 0.
+2026-04-27T10:33:41.827+05:30: We suggest setting swappiness to 0 or 1, as swapping can cause
+performance problems.
+------
+test> use Stud;
+switched to db Stud
+Stud> db.createCollection("StudInfo");
+{ ok: 1 }
+Stud> db.Stud.insertOne({Roll_No:1,Name:"Gita",Address:"Nashik"});
+{
+acknowledged: true,
+insertedId: ObjectId('69eef916f0eb7daf5fce5f47')
+}
+Stud> db.Stud.find();
+[
+{
+_id: ObjectId('69eef916f0eb7daf5fce5f47'),
+Roll_No: 1,
+Name: 'Gita',
+Address: 'Nashik'
+}
+]
+Stud>
+db.Stud.insertMany([{Roll_No:2,Name:"Sita",Address:"Pune"},{Roll_No:3,Name:"Ram",Address:
+"Pune"},{Roll_No:4,Name:"Sham",Address:"Nashik"}]);
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId('69eefb2bf0eb7daf5fce5f48'),
+'1': ObjectId('69eefb2bf0eb7daf5fce5f49'),
+'2': ObjectId('69eefb2bf0eb7daf5fce5f4a')
+}
+}
+Stud> db.Stud.find();
+[
+{
+_id: ObjectId('69eef916f0eb7daf5fce5f47'),
+Roll_No: 1,
+Name: 'Gita',
+Address: 'Nashik'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f48'),
+Roll_No: 2,
+Name: 'Sita',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+}
+]
+Stud> db.Stud.updateOne({Roll_No:1},{$set:{Roll_No:5}});
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 1,
+modifiedCount: 1,
+upsertedCount: 0
+}
+Stud> db.Stud.find();
+[
+{
+_id: ObjectId('69eef916f0eb7daf5fce5f47'),
+Roll_No: 5,
+Name: 'Gita',
+Address: 'Nashik'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f48'),
+Roll_No: 2,
+Name: 'Sita',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+}
+]
+[
+Stud> db.Stud.find().sort({Roll_No: -1});
+{
+_id: ObjectId('69eef916f0eb7daf5fce5f47'),
+Roll_No: 5,
+Name: 'Gita',
+Address: 'Nashik'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f48'),
+Roll_No: 2,
+Name: 'Sita',
+Address: 'Pune'
+}
+]
+Stud> db.Stud.find().sort({Roll_No: 1});
+[
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f48'),
+Roll_No: 2,
+Name: 'Sita',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+},
+{
+_id: ObjectId('69eef916f0eb7daf5fce5f47'),
+Roll_No: 5,
+Name: 'Gita',
+Address: 'Nashik'
+}
+]
+Stud> db.Stud.deleteOne({Roll_No:5});
+{ acknowledged: true, deletedCount: 1 }
+Stud> db.Stud.find();
+[
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f48'),
+Roll_No: 2,
+Name: 'Sita',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+}
+]
+Stud> db.Stud.updateMany({Address:"Pune"},{$set:{Address:"Mumbai"}});
+{
+acknowledged: true,
+insertedId: null,
+matchedCount: 2,
+modifiedCount: 2,
+upsertedCount: 0
+}
+Stud> db.Stud.find();
+[
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f48'),
+Roll_No: 2,
+Name: 'Sita',
+Address: 'Mumbai'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Mumbai'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+}
+]
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f49'),
+Roll_No: 3,
+Name: 'Ram',
+Address: 'Pune'
+},
+{
+_id: ObjectId('69eefb2bf0eb7daf5fce5f4a'),
+Roll_No: 4,
+Name: 'Sham',
+Address: 'Nashik'
+}
+]
