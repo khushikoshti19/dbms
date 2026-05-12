@@ -1,0 +1,243 @@
+gescoe@gescoe-OptiPlex-3010:~$ mongosh
+Current Mongosh Log ID: 69ef1d9fb3c23f5fd7ce5f46
+Connecting to:
+mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&ap
+pName=mongosh+2.5.8
+Using MongoDB: 8.2.1
+Using Mongosh: 2.5.8
+mongosh 2.8.2 is available for download: https://www.mongodb.com/try/download/shell
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+------
+The server generated these startup warnings when booting
+2026-04-27T13:15:13.656+05:30: Using the XFS filesystem is strongly recommended with the
+WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+2026-04-27T13:15:17.230+05:30: Access control is not enabled for the database. Read and write
+access to data and configuration is unrestricted
+2026-04-27T13:15:17.230+05:30: For customers running the current memory allocator, we
+suggest changing the contents of the following sysfsFile
+2026-04-27T13:15:17.230+05:30: For customers running the current memory allocator, we
+suggest changing the contents of the following sysfsFile
+2026-04-27T13:15:17.230+05:30: We suggest setting the contents of sysfsFile to 0.
+2026-04-27T13:15:17.230+05:30: We suggest setting swappiness to 0 or 1, as swapping can cause
+performance problems.
+------
+test> use Stud1;
+switched to db Stud1
+Stud1> db.createCollection("Stud");
+{ ok: 1 }
+Stud1>
+db.Stud1.insertMany([{Roll_No:1,Name:"Sita",Branch:"Comp",Marks:90},{Roll_No:2,Name:"Ra
+m",Branch:"Comp",Marks:80},{Roll_No:3,Name:"Sham",Branch:"Comp",Marks:95},{Roll_No:4,
+Name:"Radha",Branch:"IT",Marks:98},{Roll_No:5,Name:"Sam",Branch:"IT",Marks:70}]);
+{
+acknowledged: true,
+insertedIds: {
+'0': ObjectId('69ef1e2fb3c23f5fd7ce5f4c'),
+'1': ObjectId('69ef1e2fb3c23f5fd7ce5f4d'),
+'2': ObjectId('69ef1e2fb3c23f5fd7ce5f4e'),
+'3': ObjectId('69ef1e2fb3c23f5fd7ce5f4f'),
+'4': ObjectId('69ef1e2fb3c23f5fd7ce5f50')
+Stud1> db.Stud1.find();
+}
+[
+}
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4c'),
+Roll_No: 1,
+Name: 'Sita',
+Branch: 'Comp',
+Marks: 90
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4d'),
+Roll_No: 2,
+Name: 'Ram',
+Branch: 'Comp',
+Marks: 80
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4e'),
+Roll_No: 3,
+Name: 'Sham',
+Branch: 'Comp',
+Marks: 95
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4f'),
+Roll_No: 4,
+Name: 'Radha',
+Branch: 'IT',
+Marks: 98
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f50'),
+Roll_No: 5,
+Name: 'Sam',
+Branch: 'IT',
+Marks: 70
+]
+[
+Stud1> db.Stud1.find().pretty();
+}
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4c'),
+Roll_No: 1,
+Name: 'Sita',
+Branch: 'Comp',
+Marks: 90
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4d'),
+Roll_No: 2,
+Name: 'Ram',
+Branch: 'Comp',
+Marks: 80
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4e'),
+Roll_No: 3,
+Name: 'Sham',
+Branch: 'Comp',
+Marks: 95
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4f'),
+Roll_No: 4,
+Name: 'Radha',
+Branch: 'IT',
+Marks: 98
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f50'),
+Roll_No: 5,
+Name: 'Sam',
+Branch: 'IT',
+Marks: 70
+}
+]
+Stud1> db.Stud1.aggregate([{$group : {_id : "$Branch", Total_Marks : {$sum : "$Marks"}}}]);
+[ { _id: 'Comp', Total_Marks: 265 }, { _id: 'IT', Total_Marks: 168 } ]
+Stud1> db.Stud1.aggregate([{$group : {_id : "$Branch", Minimum_Marks : {$min :
+"$Marks"}}}]);
+[
+{ _id: 'IT', Minimum_Marks: 70 },
+{ _id: 'Comp', Minimum_Marks: 80 }
+]
+[
+Stud1> db.Stud1.aggregate([{$group : {_id : "$Branch", Avg_Marks : {$avg : "$Marks"}}}]);
+{ _id: 'Comp', Avg_Marks: 88.33333333333333 },
+{ _id: 'IT', Avg_Marks: 84 }
+]
+[
+Stud1> db.Stud1.aggregate([{$group : {_id : "$Branch", Maximum_Marks : {$max :
+"$Marks"}}}]);
+{ _id: 'Comp', Maximum_Marks: 95 },
+{ _id: 'IT', Maximum_Marks: 98 }
+]
+Stud1> db.Stud1.aggregate([{$group : {_id : "$Branch", Total_Count : {$count : {}}}}]);
+[ { _id: 'IT', Total_Count: 2 }, { _id: 'Comp', Total_Count: 3 } ]
+Stud1> db.Stud1.aggregate([{$match:{Branch:"Comp"}}]);
+[
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4c'),
+Roll_No: 1,
+Name: 'Sita',
+Branch: 'Comp',
+Marks: 90
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4d'),
+Roll_No: 2,
+Name: 'Ram',
+Branch: 'Comp',
+Marks: 80
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4e'),
+Roll_No: 3,
+Name: 'Sham',
+Branch: 'Comp',
+Marks: 95
+}
+]
+[
+Stud1> db.Stud1.aggregate([{$project:{Roll_No:1,Name:1}}]);
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4c'),
+Roll_No: 1,
+Name: 'Sita'
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4d'),
+Roll_No: 2,
+Name: 'Ram'
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4e'),
+Roll_No: 3,
+Name: 'Sham'
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4f'),
+Roll_No: 4,
+Name: 'Radha'
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f50'),
+Roll_No: 5,
+Name: 'Sam'
+}
+]
+[
+Stud1> db.Stud1.aggregate([{ $sort: { Marks: 1 } }]);
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f50'),
+Roll_No: 5,
+Name: 'Sam',
+Branch: 'IT',
+Marks: 70
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4d'),
+Roll_No: 2,
+Name: 'Ram',
+Branch: 'Comp',
+Marks: 80
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4c'),
+Roll_No: 1,
+Name: 'Sita',
+Branch: 'Comp',
+Marks: 90
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4e'),
+Roll_No: 3,
+Name: 'Sham',
+Branch: 'Comp',
+Marks: 95
+},
+{
+_id: ObjectId('69ef1e2fb3c23f5fd7ce5f4f'),
+Roll_No: 4,
+Name: 'Radha',
+Branch: 'IT',
+Marks: 98
+}
+]
+Stud1> db.Stud1.createIndex({"Roll_No":1});
+Roll_No_1
+Stud1> db.Stud1.getIndexes();
+[
+{ v: 2, key: { _id: 1 }, name: '_id_' },
+{ v: 2, key: { Roll_No: 1 }, name: 'Roll_No_1' }
+]
+Stud1> db.Stud1.dropIndexes();
+{
+nIndexesWas: 2,
+msg: 'non-_id indexes dropped for collection',
+ok: 1
+}
+Stud1> db.Stud1.getIndexes();
+[ { v: 2, key: { _id: 1 }, name: '_id_' } ]
