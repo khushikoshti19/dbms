@@ -1,0 +1,166 @@
+mysql> create database design;
+Query OK, 1 row affected (0.01 sec)
+mysql> use design;
+Database changed
+mysql> CREATE TABLE Customer (customer_id INT PRIMARY KEY,customer_name
+VARCHAR(50),city VARCHAR(30));
+Query OK, 0 rows affected (0.08 sec)
+mysql> CREATE TABLE Product (product_id INT PRIMARY KEY,product_name
+VARCHAR(50),price DECIMAL(10,2));
+Query OK, 0 rows affected (0.04 sec)
+mysql> CREATE TABLE Orders (order_id INT PRIMARY KEY,customer_id INT,product_id
+INT,quantity INT,FOREIGN KEY (customer_id) REFERENCES
+Customer(customer_id),FOREIGN KEY (product_id) REFERENCES Product(product_id));
+Query OK, 0 rows affected (0.06 sec)
+mysql> INSERT INTO Customer VALUES(1, 'Amit', 'Pune'),(2, 'Neha', 'Mumbai'),(3, 'Rahul',
+'Nagpur');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+mysql> INSERT INTO Product VALUES(101, 'Laptop', 55000),(102, 'Mobile', 20000),(103,
+'Headphones', 2500);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+mysql> INSERT INTO Orders VALUES(1001, 1, 101, 1),(1002, 2, 102, 2),(1003, 1, 103, 3);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+INNER JOIN
+mysql> SELECT customer_name, product_name, quantity FROM Orders INNER JOIN
+Customer ON Orders.customer_id = Customer.customer_id INNER JOIN Product ON
+Orders.product_id = Product.product_id;
++---------------+--------------+----------+
+| customer_name | product_name | quantity |
++---------------+--------------+----------+
+| Amit | Laptop | 1 |
+| Neha | Mobile | 2 |
+| Amit | Headphones | 3 |
++---------------+--------------+----------+
+3 rows in set (0.00 sec)
+LEFT JOIN
+mysql> SELECT customer_name, order_id, product_name FROM Customer LEFT JOIN Orders
+ON Customer.customer_id = Orders.customer_id LEFT JOIN Product ON Orders.product_id =
+Product.product_id;
++---------------+----------+--------------+
+| customer_name | order_id | product_name |
++---------------+----------+--------------+
+| Amit | 1001 | Laptop |
+| Amit | 1003 | Headphones |
+| Neha | 1002 | Mobile |
+| Rahul | NULL | NULL |
++---------------+----------+--------------+
+4 rows in set (0.00 sec)
+RIGHT JOIN
+mysql> SELECT product_name, customer_name FROM Orders RIGHT JOIN Product ON
+Orders.product_id = Product.product_id LEFT JOIN Customer ON Orders.customer_id =
+Customer.customer_id;
++--------------+---------------+
+| product_name | customer_name |
++--------------+---------------+
+| Laptop | Amit |
+| Mobile | Neha |
+| Headphones | Amit |
++--------------+---------------+
+3 rows in set (0.00 sec)
+FULL OUTER JOIN
+mysql> SELECT customer_name, product_name FROM Customer FULL OUTER JOIN Orders
+ON Customer.customer_id = Orders.customer_id FULL OUTER JOIN Product ON
+Orders.product_id = Product.product_id;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that
+corresponds to your MySQL server version for the right syntax to use near 'OUTER JOIN Orders
+ON Customer.customer_id = Orders.customer_id FULL OUTER JOIN P' at line 1
+CROSS JOIN
+mysql> SELECT customer_name, product_name FROM Customer CROSS JOIN Product;
++---------------+--------------+
+| customer_name | product_name |
++---------------+--------------+
+| Rahul | Laptop |
+| Neha | Laptop |
+| Amit | Laptop |
+| Rahul | Mobile |
+| Neha | Mobile |
+| Amit | Mobile |
+| Rahul | Headphones |
+| Neha | Headphones |
+| Amit | Headphones |
++---------------+--------------+
+9 rows in set (0.00 sec)
+SELF JOIN
+mysql> SELECT A.customer_name AS Customer1, B.customer_name AS Customer2, A.city
+FROM Customer A JOIN Customer B ON A.city = B.city AND A.customer_id <>
+B.customer_id;
+Empty set (0.00 sec)
+CREATE VIEW
+mysql> CREATE VIEW Order_Details_View AS SELECT order_id, customer_name,
+product_name, quantity, price,(quantity * price) AS total_amount FROM Orders JOIN Customer
+ON Orders.customer_id = Customer.customer_id JOIN Product ON Orders.product_id =
+Product.product_id;
+Query OK, 0 rows affected (0.01 sec)
+mysql> show tables;
++--------------------+
+| Tables_in_design |
++--------------------+
+| customer |
+| order_details_view |
+| orders |
+| product |
++--------------------+
+4 rows in set (0.00 sec)
+DISPLAY VIEW
+mysql> SELECT * FROM Order_Details_View;
++----------+---------------+--------------+----------+----------+--------------+
+| order_id | customer_name | product_name | quantity | price | total_amount |
++----------+---------------+--------------+----------+----------+--------------+
+| 1001 | Amit | Laptop | 1 | 55000.00 | 55000.00 |
+| 1002 | Neha | Mobile | 2 | 20000.00 | 40000.00 |
+| 1003 | Amit | Headphones | 3 | 2500.00 | 7500.00 |
++----------+---------------+--------------+----------+----------+--------------+
+3 rows in set (0.00 sec)
+mysql> desc Order_Details_View;
++---------------+---------------+------+-----+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| order_id | int | NO | | NULL | |
+| customer_name | varchar(50) | YES | | NULL | |
+| product_name | varchar(50) | YES | | NULL | |
+| quantity | int | YES | | NULL | |
+| price | decimal(10,2) | YES | | NULL | |
+| total_amount | decimal(20,2) | YES | | NULL | |
++---------------+---------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+mysql> CREATE VIEW Pune_Customers AS SELECT customer_name FROM Customer
+WHERE city = 'Pune';
+Query OK, 0 rows affected (0.01 sec)
+mysql> show tables;
++--------------------+
+| Tables_in_design |
++--------------------+
+| customer |
+| order_details_view |
+| orders |
+| product |
+| pune_customers |
++--------------------+
+5 rows in set (0.00 sec)
+mysql> UPDATE Pune_Customers SET customer_name = 'Amit Kumar'WHERE
+customer_name = 'Amit';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1 Changed: 1 Warnings: 0
+mysql> select * from Pune_Customers;
++---------------+
+| customer_name |
++---------------+
+| Amit Kumar |
++---------------+
+1 row in set (0.00 sec)
+DROP VIEW
+mysql> DROP VIEW Order_Details_View;
+Query OK, 0 rows affected (0.01 sec)
+mysql> show tables;
++------------------+
+| Tables_in_design |
++------------------+
+| customer |
+| orders |
+| product |
+| pune_customers |
++------------------+
+4 rows in set (0.00 sec)
