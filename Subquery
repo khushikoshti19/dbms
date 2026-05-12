@@ -1,0 +1,88 @@
+mysql> create database Sub;
+Query OK, 1 row affected (0.17 sec)
+mysql> use Sub;
+Database changed
+mysql> create table Customer (cid int (20)Primary key,cname varchar (50),city varchar (50));
+Query OK, 0 rows affected, 1 warning (0.59 sec)
+mysql> create table Product (pid int (20)Primary key,pname varchar (50),price decimal(10,2));
+Query OK, 0 rows affected, 1 warning (0.95 sec)
+mysql> create table Orders (oid int (20) Primary key,cid int(20),pid int(20),quantity int(30),Foreign
+key(cid)references Customer(cid),Foreign key(pid)references Product(pid));
+Query OK, 0 rows affected, 4 warnings (0.77 sec)
+mysql> INSERT INTO Customer VALUES (1, 'Amit', 'Pune'), (2, 'Neha', 'Mumbai'),(3, 'Rahul',
+'Nagpur');
+Query OK, 3 rows affected (0.13 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+mysql> INSERT INTO Product VALUES (101, 'Laptop', 55000), (102, 'Mobile', 20000), (103,
+'Headphones', 2500);
+Query OK, 3 rows affected (0.11 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+mysql> INSERT INTO Orders VALUES (1001, 1, 101, 1), (1002, 2, 102, 2), (1003, 1, 103, 3);
+Query OK, 3 rows affected (0.10 sec)
+Records: 3 Duplicates: 0 Warnings: 0
+Subquery using IN
+mysql> Select cname from Customer where cid in (select cid from Orders);
++-------+
+| cname |
++-------+
+| Amit |
+| Neha |
++-------+
+2 rows in set (0.00 sec)
+Subquery using NOT IN
+mysql> Select cname from Customer where cid not in (select cid from Orders);
++-------+
+| cname |
++-------+
+| Rahul |
++-------+
+1 row in set (0.02 sec)
+Subquery using (Single-Row Subquery)
+mysql> SELECT pname, price FROM Product WHERE price = (SELECT MAX(price) FROM
+Product);
++--------+----------+
+| pname | price |
++--------+----------+
+| Laptop | 55000.00 |
++--------+----------+
+1 row in set (0.00 sec)
+Subquery in SELECT Clause
+mysql> SELECT oid, (SELECT price FROM Product WHERE Product.pid = Orders.pid) *
+quantity AS total_amount FROM Orders;
++------+--------------+
+| oid | total_amount |
++------+--------------+
+| 1001 | 55000.00 |
+| 1002 | 40000.00 |
+| 1003 | 7500.00 |
++------+--------------+
+3 rows in set (0.00 sec)
+Subquery in FROM Clause
+mysql> SELECT cid, total FROM (SELECT Orders.cid, SUM(Product.price * Orders.quantity) AS
+total FROM Orders JOIN Product ON Orders.pid = Product.pid GROUP BY Orders.cid) AS
+Purchase WHERE total > 30000;
++------+----------+
+| cid | total |
++------+----------+
+| 1 | 62500.00 |
+| 2 | 40000.00 |
++------+----------+
+2 rows in set (0.02 sec)
+Correlated Subquery
+mysql> select pname,price from Product P where price>(select Avg(price)from Product where
+Product.pid=P.pid Or 1=1);
++--------+----------+
+| pname | price |
++--------+----------+
+| Laptop | 55000.00 |
++--------+----------+
+1 row in set (0.00 sec)
+Subquery with EXISTS
+mysql> select cname from Customer C where exists(select 1 from Orders O where O.cid=C.cid);
++-------+
+| cname |
++-------+
+| Amit |
+| Neha |
++-------+
+2 rows in set (0.00 sec)
